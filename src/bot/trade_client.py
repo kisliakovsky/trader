@@ -155,7 +155,7 @@ class BasicTradeClient(TradeClient):
         self.__buy_raise_coefficient = buy_raise_coefficient
         self.__buy_decrease_coefficient = buy_decrease_coefficient
         self.__decimal_digits = 2
-        self.__symbol = 'BTCUSDT'
+        self.__symbol = 'BTCFDUSD'
 
     def buy_market_order(self, quantity: float) -> MarketOrder:
         return self.__market_order(quantity, 'BUY')
