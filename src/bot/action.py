@@ -3,7 +3,7 @@ import time
 from abc import ABC
 from logging import Logger
 
-from bot.counter import Counter
+from counter import Counter
 
 
 class Action(ABC):

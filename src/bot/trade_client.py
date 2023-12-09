@@ -5,7 +5,7 @@ from logging import Logger
 from typing import Any
 from _decimal import Decimal
 
-from bot import binance_client
+import binance_client
 
 
 class Order(ABC):

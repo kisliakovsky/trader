@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from itertools import cycle
 from logging import Logger
 
-from bot.counter import Counter
-from bot.trade_client import TradeClient
+from counter import Counter
+from trade_client import TradeClient
 
 
 class TradeStrategy(ABC):

@@ -1,9 +1,9 @@
 """This module contains a bot that can trade with a special client following special strategies"""
 from logging import Logger
 
-from bot.action import LimitAction
-from bot.counter import Counter
-from bot.trade_strategy import TradeStrategySupplier
+from action import LimitAction
+from counter import Counter
+from trade_strategy import TradeStrategySupplier
 
 
 class TradeBot:

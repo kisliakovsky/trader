@@ -4,12 +4,12 @@ from _decimal import Decimal
 
 from binance.client import Client as BinanceClient
 
-from bot.binance_client import LoggingBinanceClient, MarginClient, SpotClient, RetryClient
-from bot.action import Sleep, NoopAction, LoggingAction, LimitAction, Exit
-from bot.logger_factory import LoggerFactory
-from bot.trade_bot import TradeBot
-from bot.trade_client import BasicTradeClient, LoggingTradeClient, RecoveringTradeClient
-from bot.trade_strategy import CycleTradeStrategySupplier, BuyStrategy, SellStrategy, LoggingTradeStrategySupplier
+from binance_client import LoggingBinanceClient, MarginClient, SpotClient, RetryClient
+from action import Sleep, NoopAction, LoggingAction, LimitAction, Exit
+from logger_factory import LoggerFactory
+from trade_bot import TradeBot
+from trade_client import BasicTradeClient, LoggingTradeClient, RecoveringTradeClient
+from trade_strategy import CycleTradeStrategySupplier, BuyStrategy, SellStrategy, LoggingTradeStrategySupplier
 
 logger_factory = LoggerFactory('%(asctime)s %(name)s: %(message)s', DEBUG)
 red_logger_factory = LoggerFactory("\x1b[31;20m%(asctime)s %(name)s: %(message)s\x1b[0m", DEBUG)

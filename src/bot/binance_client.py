@@ -5,7 +5,7 @@ from logging import Logger
 from binance.exceptions import BinanceAPIException
 from urllib3.exceptions import ReadTimeoutError
 
-from bot.counter import Counter
+from counter import Counter
 
 
 class LoggingBinanceClient:
