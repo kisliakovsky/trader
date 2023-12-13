@@ -2,7 +2,9 @@ import sys
 import time
 from abc import ABC
 from logging import Logger
+from typing import List
 
+from quantity import Quantity
 from counter import Counter
 
 
@@ -46,6 +48,31 @@ class Sleep(Action):
 
     def __str__(self):
         return f'Sleep, duration {self.__duration_in_sec} sec'
+
+
+class QuantityReset(Action):
+
+    def __init__(self, quantity: Quantity):
+        self.__quantity = quantity
+
+    def run(self):
+        self.__quantity.reset()
+
+    def __str__(self):
+        return f'Reset quantity'
+
+
+class CompositeAction(Action):
+
+    def __init__(self, actions: List[Action]):
+        self.__actions = actions
+
+    def run(self):
+        for action in self.__actions:
+            action.run()
+
+    def __str__(self):
+        return "".join(map(str, self.__actions))
 
 
 class Exit(Action):

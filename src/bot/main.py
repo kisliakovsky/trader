@@ -5,7 +5,8 @@ from _decimal import Decimal
 from binance.client import Client as BinanceClient
 
 from binance_client import LoggingBinanceClient, MarginClient, SpotClient, RetryClient
-from action import Sleep, NoopAction, LoggingAction, LimitAction, Exit
+from action import Sleep, NoopAction, LoggingAction, LimitAction, Exit, CompositeAction, QuantityReset
+from bot.quantity import Quantity
 from logger_factory import LoggerFactory
 from trade_bot import TradeBot
 from trade_client import BasicTradeClient, LoggingTradeClient, RecoveringTradeClient
@@ -35,6 +36,7 @@ trade_client = LoggingTradeClient(
     ),
     logger_factory.logger('Trade client          ')
 )
+quantity = Quantity(0.00088000)
 TradeBot(
     strategy_supplier=LoggingTradeStrategySupplier(
         CycleTradeStrategySupplier(
@@ -45,7 +47,13 @@ TradeBot(
         ),
         logger_factory.logger('Strategy supplier     ')
     ),
-    strategy_changes_limit=LimitAction(5, LoggingAction(Sleep(600), logger_factory.logger('Strategy change action'))),
+    strategy_changes_limit=LimitAction(
+        5,
+        LoggingAction(
+            CompositeAction([QuantityReset(quantity), Sleep(600)]),
+            logger_factory.logger('Strategy change action')
+        )
+    ),
     expiration_limit=LimitAction(1, LoggingAction(Exit(), logger_factory.logger('Expiration action     '))),
     logger=red_logger_factory.logger('Bot                   ')
-).start(0.00088000)
+).start(quantity)

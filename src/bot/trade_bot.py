@@ -2,6 +2,7 @@
 from logging import Logger
 
 from action import LimitAction
+from quantity import Quantity
 from counter import Counter
 from trade_strategy import TradeStrategySupplier
 
@@ -23,8 +24,7 @@ class TradeBot:
         self.__filled_counter = Counter(0)
         self.__expired_counter = Counter(0)
 
-    def start(self, quantity: float):
-        current_quantity = quantity
+    def start(self, quantity: Quantity):
         strategy = self.__strategy_supplier.next_strategy()
         while True:
             self.__logger.debug("Run %s, strategy %s", str(self.__run_counter), str(strategy))
@@ -33,12 +33,12 @@ class TradeBot:
                 str(self.__filled_counter),
                 str(self.__expired_counter)
             )
-            status = strategy.run(current_quantity)
+            status = strategy.run(quantity)
             self.__run_counter.inc()
             if status == 'FILLED':
                 self.__filled_counter.inc()
                 self.__strategy_changes_in_a_row_counter.reset()
-                current_quantity = quantity
+                quantity.reset()
             elif status == 'EXPIRED':
                 self.__expired_counter.inc()
                 self.__expiration_limit.run(self.__expired_counter)
@@ -47,6 +47,6 @@ class TradeBot:
                     self.__strategy_changes_in_a_row_counter.inc()
                     self.__strategy_changes_limit.reset_and_run(self.__strategy_changes_in_a_row_counter)
                 strategy = next_strategy
-                current_quantity = current_quantity * 2
+                quantity.double()
             else:
                 raise ValueError(f"Unknown order status: {status}. I'm stopping.")

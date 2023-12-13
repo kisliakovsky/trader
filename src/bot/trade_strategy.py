@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from itertools import cycle
 from logging import Logger
 
+from quantity import Quantity
 from counter import Counter
 from trade_client import TradeClient
 
@@ -9,7 +10,7 @@ from trade_client import TradeClient
 class TradeStrategy(ABC):
 
     @abstractmethod
-    def run(self, quantity: float) -> str:
+    def run(self, quantity: Quantity) -> str:
         pass
 
 
@@ -55,7 +56,7 @@ class LoggingTradeStrategy(TradeStrategy):
         self.__strategy = strategy
         self.__logger = logger
 
-    def run(self, quantity: float) -> str:
+    def run(self, quantity: Quantity) -> str:
         self.__logger.debug("Run %s", self.__strategy)
         return self.__strategy.run(quantity)
 
@@ -67,9 +68,9 @@ class SellStrategy(TradeStrategy):
     def __init__(self, client: TradeClient):
         self.__client = client
 
-    def run(self, quantity: float) -> str:
-        market_order = self.__client.sell_market_order(quantity)
-        order = self.__client.buy_oco_order(quantity, market_order.price())
+    def run(self, quantity: Quantity) -> str:
+        market_order = self.__client.sell_market_order(quantity.float_value())
+        order = self.__client.buy_oco_order(quantity.float_value(), market_order.price())
         return order.get_status(self.__client)
 
     def __str__(self) -> str:
@@ -80,9 +81,9 @@ class BuyStrategy(TradeStrategy):
     def __init__(self, client: TradeClient):
         self.__client = client
 
-    def run(self, quantity: float) -> str:
-        market_order = self.__client.buy_market_order(quantity)
-        order = self.__client.sell_oco_order(quantity, market_order.price())
+    def run(self, quantity: Quantity) -> str:
+        market_order = self.__client.buy_market_order(quantity.float_value())
+        order = self.__client.sell_oco_order(quantity.float_value(), market_order.price())
         return order.get_status(self.__client)
 
     def __str__(self):
