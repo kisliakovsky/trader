@@ -42,11 +42,11 @@ class TradeBot:
             elif status == 'EXPIRED':
                 self.__expired_counter.inc()
                 self.__expiration_limit.run(self.__expired_counter)
+                quantity.double()
                 next_strategy = self.__strategy_supplier.next_strategy()
                 if strategy != next_strategy:
                     self.__strategy_changes_in_a_row_counter.inc()
                     self.__strategy_changes_limit.reset_and_run(self.__strategy_changes_in_a_row_counter)
                 strategy = next_strategy
-                quantity.double()
             else:
                 raise ValueError(f"Unknown order status: {status}. I'm stopping.")
