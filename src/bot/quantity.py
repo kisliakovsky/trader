@@ -9,6 +9,9 @@ class Quantity:
     def double(self):
         self.__quantity = self.__quantity * 2
 
+    def multiply(self, multiplier: float):
+        self.__quantity = self.__quantity * multiplier
+
     def reset(self):
         self.__quantity = self.__init_value
 

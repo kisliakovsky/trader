@@ -42,7 +42,7 @@ class TradeBot:
             elif status == 'EXPIRED':
                 self.__expired_counter.inc()
                 self.__expiration_limit.run(self.__expired_counter)
-                quantity.double()
+                quantity.multiply(1.1)
                 next_strategy = self.__strategy_supplier.next_strategy()
                 if strategy != next_strategy:
                     self.__strategy_changes_in_a_row_counter.inc()
