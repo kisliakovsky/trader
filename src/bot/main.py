@@ -6,7 +6,7 @@ from binance.client import Client as BinanceClient
 
 from binance_client import LoggingBinanceClient, MarginClient, SpotClient, RetryClient
 from action import Sleep, NoopAction, LoggingAction, LimitAction, Exit, CompositeAction, QuantityReset
-from bot.quantity import Quantity
+from quantity import Quantity
 from logger_factory import LoggerFactory
 from trade_bot import TradeBot
 from trade_client import BasicTradeClient, LoggingTradeClient, RecoveringTradeClient
