@@ -154,7 +154,8 @@ class BasicTradeClient(TradeClient):
         self.__sell_decrease_coefficient = sell_decrease_coefficient
         self.__buy_raise_coefficient = buy_raise_coefficient
         self.__buy_decrease_coefficient = buy_decrease_coefficient
-        self.__decimal_digits = 2
+        self.__price_decimal_digits = 2
+        self.__quantity_decimal_digits = 2
         self.__symbol = 'BTCFDUSD'
 
     def buy_market_order(self, quantity: float) -> MarketOrder:
@@ -168,7 +169,7 @@ class BasicTradeClient(TradeClient):
             'symbol': self.__symbol,
             'side': side,
             'type': 'MARKET',
-            'quantity': quantity
+            'quantity': round(quantity, self.__quantity_decimal_digits)
         }
         response = self.__client.create_order(**request)
         status = response['status']
@@ -180,20 +181,20 @@ class BasicTradeClient(TradeClient):
         raise ValueError(f"Unexpected order status: {status}")
 
     def sell_oco_order(self, quantity: float, market_price: str) -> Order:
-        limit_price = str(round(Decimal(market_price) * self.__sell_raise_coefficient, self.__decimal_digits))
-        stop_price = str(round(Decimal(market_price) * self.__sell_decrease_coefficient, self.__decimal_digits))
+        limit_price = str(round(Decimal(market_price) * self.__sell_raise_coefficient, self.__price_decimal_digits))
+        stop_price = str(round(Decimal(market_price) * self.__sell_decrease_coefficient, self.__price_decimal_digits))
         return self.__oco_order(quantity, 'SELL', limit_price, stop_price)
 
     def buy_oco_order(self, quantity: float, market_price: str) -> Order:
-        limit_price = str(round(Decimal(market_price) * self.__buy_decrease_coefficient, self.__decimal_digits))
-        stop_price = str(round(Decimal(market_price) * self.__buy_raise_coefficient, self.__decimal_digits))
+        limit_price = str(round(Decimal(market_price) * self.__buy_decrease_coefficient, self.__price_decimal_digits))
+        stop_price = str(round(Decimal(market_price) * self.__buy_raise_coefficient, self.__price_decimal_digits))
         return self.__oco_order(quantity, 'BUY', limit_price, stop_price)
 
     def __oco_order(self, quantity: float, side: str, limit_price: str, stop_price: str) -> LimitMakerOrder:
         request = {
             'symbol': self.__symbol,
             'side': side,
-            'quantity': quantity,
+            'quantity': round(quantity, self.__quantity_decimal_digits),
             'price': limit_price,
             'stopPrice': stop_price,
             'stopLimitPrice': stop_price,
